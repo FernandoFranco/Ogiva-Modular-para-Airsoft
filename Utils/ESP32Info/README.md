@@ -23,7 +23,7 @@ ESP32Info esp32Info;
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  
+
   // Exibe todas as informações
   esp32Info.printAll();
 }
@@ -42,24 +42,31 @@ void loop() {
 ## Métodos Disponíveis
 
 ### `printAll()`
+
 Exibe todas as informações do ESP32 de forma formatada.
 
 ### `printChipInfo()`
+
 Exibe apenas informações do chip (modelo, revisão, núcleos, frequência).
 
 ### `printFlashInfo()`
+
 Exibe apenas informações da memória Flash.
 
 ### `printPsramInfo()`
+
 Exibe apenas informações da PSRAM.
 
 ### `printHeapInfo()`
+
 Exibe apenas informações do Heap (RAM).
 
 ### `printNetworkInfo()`
+
 Exibe apenas informações de rede (MAC Address).
 
 ### `printMemoryUsage(unsigned long timestamp)`
+
 Exibe o uso atual de memória (Heap e PSRAM) com timestamp.
 
 ## Dependências

@@ -6,7 +6,7 @@ Interface Humana-Máquina para configuração de módulos do Projeto Ogiva.
 
 ## 📋 Objetivo
 
-Esta IHM de configuração foi desenvolvida para fornecer **interfaces de entrada e saída simples e padronizadas** para os módulos do Projeto Ogiva. 
+Esta IHM de configuração foi desenvolvida para fornecer **interfaces de entrada e saída simples e padronizadas** para os módulos do Projeto Ogiva.
 
 Seu principal objetivo é **reduzir a complexidade de desenvolvimento** de cada módulo ao centralizar a responsabilidade de interação com o usuário em um único ponto. Com isso, os módulos podem focar exclusivamente em suas lógicas de jogo, enquanto a IHM lida com a configuração do jogo no módulo.
 
@@ -22,6 +22,7 @@ A solução também visa oferecer uma **experiência amigável ao usuário final
 ## 🔌 Componentes Eletrônicos
 
 ### Teclado Matricial 4x4
+
 16 botões em matriz 4x4
 
 ![Teclado 4x4](images/teclado_4x4.jpg)
@@ -29,6 +30,7 @@ A solução também visa oferecer uma **experiência amigável ao usuário final
 ---
 
 ### Módulo PCF8574 I/O
+
 Expansor De I/O 8-bit I²C genérico para interface com teclado
 
 ![PCF8574 I/O](images/pcf8574_io.jpg)
@@ -36,6 +38,7 @@ Expansor De I/O 8-bit I²C genérico para interface com teclado
 ---
 
 ### Display LCD 1604A
+
 Display 16 colunas x 4 linhas com controlador HD44780
 
 ![Display LCD 1604A](images/lcd_1604a.jpg)
@@ -43,6 +46,7 @@ Display 16 colunas x 4 linhas com controlador HD44780
 ---
 
 ### Módulo PCF8574 LCD
+
 Adaptador I²C específico para displays LCD
 
 ![PCF8574 LCD](images/pcf8574_lcd.jpg)
@@ -50,6 +54,7 @@ Adaptador I²C específico para displays LCD
 ---
 
 ### LED 5mm Verde
+
 Indicador de status de funcionamento
 
 ![LED Verde](images/led_verde.jpg)
@@ -57,9 +62,11 @@ Indicador de status de funcionamento
 ---
 
 ### Resistor 330Ω
+
 Resistor limitador de corrente para o LED de status
 
 **Notações equivalentes:**
+
 - 330Ω / 330R / 330 ohms
 - Código SMD: 331
 
@@ -68,6 +75,7 @@ Resistor limitador de corrente para o LED de status
 ---
 
 ### Buzzer Contínuo Com Oscilador 3V
+
 Buzzer com oscilador integrado para feedback sonoro
 
 ![Buzzer](images/buzzer.jpg)
@@ -75,6 +83,7 @@ Buzzer com oscilador integrado para feedback sonoro
 ---
 
 ### Conector SATA Fêmea 7 Pinos
+
 Conector para alimentação e comunicação I²C
 
 ![Conector SATA](images/conector_sata.jpg)
@@ -82,9 +91,11 @@ Conector para alimentação e comunicação I²C
 ---
 
 ### DS2431
+
 Chip 1-Wire EEPROM 1024 bits para identificação única
 
 **Configuração: Modo Parasita**
+
 - **GND**: Terra
 - **IO**: Dados 1-Wire (com pull-up)
 - **VCC/NC**: Não conectado (modo parasita)
@@ -96,9 +107,11 @@ Chip 1-Wire EEPROM 1024 bits para identificação única
 ---
 
 ### Resistor 4.7kΩ
+
 Resistor pull-up para linha 1-Wire do DS2431
 
 **Notações equivalentes:**
+
 - 4.7kΩ / 4k7 / 4.7K / 4700Ω / 4700R
 - Código SMD: 472
 
@@ -106,15 +119,15 @@ Resistor pull-up para linha 1-Wire do DS2431
 
 ## 🔧 Pinagem SATA (Fêmea 7 pinos)
 
-| Pino | Nome | Função | Direção |
-|------|------|--------|---------|
-| 1 | **VCC** | Alimentação 3.3V para todos os componentes | Entrada |
-| 2 | **GND** | Terra comum entre IHM e módulo | Comum |
-| 3 | **SDA** | Comunicação I2C (dados) para teclado e display | Bidirecional |
-| 4 | **SCL** | Comunicação I2C (clock) para teclado e display | Entrada |
-| 5 | **1-Wire (DS2431)** | Identificação única da IHM via protocolo 1-Wire | Bidirecional |
-| 6 | **Buzzer** | Controle do buzzer | Entrada |
-| 7 | **LED Status** | Controle do LED de status | Entrada |
+| Pino | Nome                | Função                                          | Direção      |
+| ---- | ------------------- | ----------------------------------------------- | ------------ |
+| 1    | **VCC**             | Alimentação 3.3V para todos os componentes      | Entrada      |
+| 2    | **GND**             | Terra comum entre IHM e módulo                  | Comum        |
+| 3    | **SDA**             | Comunicação I2C (dados) para teclado e display  | Bidirecional |
+| 4    | **SCL**             | Comunicação I2C (clock) para teclado e display  | Entrada      |
+| 5    | **1-Wire (DS2431)** | Identificação única da IHM via protocolo 1-Wire | Bidirecional |
+| 6    | **Buzzer**          | Controle do buzzer                              | Entrada      |
+| 7    | **LED Status**      | Controle do LED de status                       | Entrada      |
 
 ### Notas sobre Pinagem
 
@@ -204,7 +217,7 @@ A IHM de Configuração **não possui lógica interna**. Toda a inteligência é
 
 3. **Inicialização**: Se tudo estiver OK, o módulo acende o LED verde indicando prontidão
 
-4. **Operação**: 
+4. **Operação**:
    - O módulo envia mensagens/menus para o display
    - O usuário interage via teclado
    - O buzzer fornece feedback sonoro para cada ação
@@ -227,10 +240,10 @@ void setup() {
     uint64_t id = ihm.obterID(); // ID único do DS2431
     ihm.inicializar();
     ihm.exibirMenu("1-Bomba 2-Sequencia");
-    
+
     char tecla = ihm.aguardarTecla();
     ihm.bip(); // Feedback sonoro
-    
+
     // Processar escolha...
   }
 }
@@ -248,29 +261,29 @@ void setup() {
 
 ## � Lista de Materiais (BOM)
 
-| Qtd | Componente | Especificação | Uso |
-|-----|------------|---------------|-----|
-| 1 | Teclado Matricial | 4x4, 16 botões | Entrada de dados |
-| 1 | Display LCD | 1604A (16x4) | Saída visual |
-| 1 | PCF8574 I/O | Expansor I²C genérico (azul) | Interface teclado |
-| 1 | PCF8574 LCD | Adaptador I²C para LCD | Interface display |
-| 1 | LED | 5mm verde | Indicador de status |
-| 1 | Resistor | 330Ω (330R) | Limitador corrente LED |
-| 1 | Buzzer | Contínuo com oscilador 3V | Feedback sonoro |
-| 1 | Conector SATA | 7 pinos fêmea | Interface módulo |
-| 1 | DS2431 | 1-Wire EEPROM 1024 bits | Identificação única |
-| 1 | Resistor | 4.7kΩ (4k7) | Pull-up 1-Wire |
-| - | Diversos | Fios, placa, solda | Montagem |
+| Qtd | Componente        | Especificação                | Uso                    |
+| --- | ----------------- | ---------------------------- | ---------------------- |
+| 1   | Teclado Matricial | 4x4, 16 botões               | Entrada de dados       |
+| 1   | Display LCD       | 1604A (16x4)                 | Saída visual           |
+| 1   | PCF8574 I/O       | Expansor I²C genérico (azul) | Interface teclado      |
+| 1   | PCF8574 LCD       | Adaptador I²C para LCD       | Interface display      |
+| 1   | LED               | 5mm verde                    | Indicador de status    |
+| 1   | Resistor          | 330Ω (330R)                  | Limitador corrente LED |
+| 1   | Buzzer            | Contínuo com oscilador 3V    | Feedback sonoro        |
+| 1   | Conector SATA     | 7 pinos fêmea                | Interface módulo       |
+| 1   | DS2431            | 1-Wire EEPROM 1024 bits      | Identificação única    |
+| 1   | Resistor          | 4.7kΩ (4k7)                  | Pull-up 1-Wire         |
+| -   | Diversos          | Fios, placa, solda           | Montagem               |
 
 ## �🚀 Status de Desenvolvimento
 
-| Componente | Status |
-|------------|--------|
-| Hardware (Esquemático) | 🟡 Em progresso |
-| Biblioteca Arduino | 🟡 Em progresso |
-| Documentação | 🟡 Em progresso |
-| Testes | 🔴 Aguardando hardware |
-| PCB | 🔴 Planejamento futuro |
+| Componente             | Status                 |
+| ---------------------- | ---------------------- |
+| Hardware (Esquemático) | 🟡 Em progresso        |
+| Biblioteca Arduino     | 🟡 Em progresso        |
+| Documentação           | 🟡 Em progresso        |
+| Testes                 | 🔴 Aguardando hardware |
+| PCB                    | 🔴 Planejamento futuro |
 
 ---
 

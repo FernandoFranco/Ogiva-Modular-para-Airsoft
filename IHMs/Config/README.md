@@ -178,7 +178,7 @@ graph LR
 
     PIN6 --> Buzzer_P
     PIN2 --> Buzzer_N
-    linkStyle 7 stroke:white,stroke-width:4px
+    linkStyle 7 stroke:gray,stroke-width:4px
     linkStyle 8 stroke:black,stroke-width:4px
 
     PIN7 --> R330R[330Ω]

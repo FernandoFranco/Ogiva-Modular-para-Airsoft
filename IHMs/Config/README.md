@@ -56,6 +56,17 @@ Indicador de status de funcionamento
 
 ---
 
+### Resistor 330Ω
+Resistor limitador de corrente para o LED de status
+
+**Notações equivalentes:**
+- 330Ω / 330R / 330 ohms
+- Código SMD: 331
+
+![Resistor 330R](images/resistor_330r.jpg)
+
+---
+
 ### Buzzer Contínuo Com Oscilador 3V
 Buzzer com oscilador integrado para feedback sonoro
 
@@ -73,7 +84,25 @@ Conector para alimentação e comunicação I²C
 ### DS2431
 Chip 1-Wire EEPROM 1024 bits para identificação única
 
+**Configuração: Modo Parasita**
+- **GND**: Terra
+- **IO**: Dados 1-Wire (com pull-up)
+- **VCC/NC**: Não conectado (modo parasita)
+
+> No modo parasita, o chip é alimentado pela linha de dados através do resistor pull-up.
+
 ![DS2431](images/ds2431.jpg)
+
+---
+
+### Resistor 4.7kΩ
+Resistor pull-up para linha 1-Wire do DS2431
+
+**Notações equivalentes:**
+- 4.7kΩ / 4k7 / 4.7K / 4700Ω / 4700R
+- Código SMD: 472
+
+![Resistor 4k7](images/resistor_4k7.jpg)
 
 ## 🔧 Pinagem SATA (Fêmea 7 pinos)
 
@@ -93,6 +122,79 @@ Chip 1-Wire EEPROM 1024 bits para identificação única
   - Identificação única de cada IHM
   - Suporte a múltiplas IHMs conectadas via barramento
   - Armazenamento de configurações persistentes (1024 bits EEPROM)
+
+### Diagrama de Conexões
+
+```mermaid
+%%{init: {
+  "flowchart": {
+    "nodeSpacing": 60,
+    "rankSpacing": 120
+  }
+}}%%
+
+graph LR
+    subgraph SATA
+      PIN1[PIN 1]
+      PIN2[PIN 2]
+      PIN3[PIN 3]
+      PIN4[PIN 4]
+      PIN5[PIN 5]
+      PIN6[PIN 6]
+      PIN7[PIN 7]
+    end
+
+    subgraph I2C
+      I2C_VCC[VCC]
+      I2C_GND[GND]
+      I2C_SDA[SDA]
+      I2C_SCL[SCL]
+    end
+
+    subgraph DS2431
+      DS2431_GND[GND]
+      DS2431_Data[Data]
+      DS2431_NC[NC]
+    end
+
+    subgraph Buzzer
+      Buzzer_P[+]
+      Buzzer_N[-]
+    end
+
+    subgraph LED
+      LED_P[+]
+      LED_N[-]
+    end
+
+    PIN1 --> I2C_VCC
+    PIN2 --> I2C_GND
+    PIN3 --> I2C_SDA
+    PIN4 --> I2C_SCL
+    linkStyle 0 stroke:red,stroke-width:4px
+    linkStyle 1 stroke:black,stroke-width:4px
+    linkStyle 2 stroke:blue,stroke-width:4px
+    linkStyle 3 stroke:orange,stroke-width:4px
+
+    PIN5 --> R4K7[4.7kΩ]
+    R4K7 --> DS2431_Data
+    PIN2 --> DS2431_GND
+    linkStyle 4 stroke:green,stroke-width:4px
+    linkStyle 5 stroke:green,stroke-width:4px
+    linkStyle 6 stroke:black,stroke-width:4px
+
+    PIN6 --> Buzzer_P
+    PIN2 --> Buzzer_N
+    linkStyle 7 stroke:white,stroke-width:4px
+    linkStyle 8 stroke:black,stroke-width:4px
+
+    PIN7 --> R330R[330Ω]
+    R330R --> LED_P
+    PIN2 --> LED_N
+    linkStyle 9 stroke:purple,stroke-width:4px
+    linkStyle 10 stroke:purple,stroke-width:4px
+    linkStyle 11 stroke:black,stroke-width:4px
+```
 
 ## 💡 Funcionamento
 
@@ -151,7 +253,23 @@ void setup() {
 - `bip()` - Aciona buzzer para feedback
 - `ledStatus()` - Controla LED de status
 
-## 🚀 Status de Desenvolvimento
+## � Lista de Materiais (BOM)
+
+| Qtd | Componente | Especificação | Uso |
+|-----|------------|---------------|-----|
+| 1 | Teclado Matricial | 4x4, 16 botões | Entrada de dados |
+| 1 | Display LCD | 1604A (16x4) | Saída visual |
+| 1 | PCF8574 I/O | Expansor I²C genérico (azul) | Interface teclado |
+| 1 | PCF8574 LCD | Adaptador I²C para LCD | Interface display |
+| 1 | LED | 5mm verde | Indicador de status |
+| 1 | Resistor | 330Ω (330R) | Limitador corrente LED |
+| 1 | Buzzer | Contínuo com oscilador 3V | Feedback sonoro |
+| 1 | Conector SATA | 7 pinos fêmea | Interface módulo |
+| 1 | DS2431 | 1-Wire EEPROM 1024 bits | Identificação única |
+| 1 | Resistor | 4.7kΩ (4k7) | Pull-up 1-Wire |
+| - | Diversos | Fios, placa, solda | Montagem |
+
+## �🚀 Status de Desenvolvimento
 
 | Componente | Status |
 |------------|--------|

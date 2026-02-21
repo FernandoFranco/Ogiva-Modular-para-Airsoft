@@ -1,0 +1,25 @@
+# Dependências e builds
+.pio/
+.vscode/
+node_modules/
+*.pyc
+
+# Arquivos compilados
+*.o
+*.bin
+*.elf
+
+# Arquivos de backup
+*.bak
+*.tmp
+*~
+
+# Logs
+*.log
+
+# Arquivos C/C++ (formatados por clang-format)
+*.cpp
+*.c
+*.h
+*.hpp
+*.ino

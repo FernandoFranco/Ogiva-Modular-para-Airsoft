@@ -75,13 +75,6 @@ Todos os módulos devem implementar o seguinte padrão de pinagem SATA (Fêmea 7
 ## 📐 Esquema de Conexão
 
 ```mermaid
-%%{init: {
-  "flowchart": {
-    "nodeSpacing": 60,
-    "rankSpacing": 80
-  }
-}}%%
-
 graph LR
     subgraph ESP32["ESP32-S3"]
       VCC_ESP[3V3]

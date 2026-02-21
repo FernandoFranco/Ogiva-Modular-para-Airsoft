@@ -126,13 +126,6 @@ Resistor pull-up para linha 1-Wire do DS2431
 ### Diagrama de Conexões
 
 ```mermaid
-%%{init: {
-  "flowchart": {
-    "nodeSpacing": 60,
-    "rankSpacing": 120
-  }
-}}%%
-
 graph LR
     subgraph SATA
       PIN1[PIN 1]

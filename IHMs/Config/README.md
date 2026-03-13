@@ -140,7 +140,7 @@ Resistor pull-up para linha 1-Wire do DS2431
 
 ![Schematic das ligações](images/schematic.svg)
 
-> 🔗 [Abrir no Visual Wiring](https://fernandofranco.github.io/visual-wiring?project=https://raw.githubusercontent.com/FernandoFranco/Ogiva-Modular-para-Airsoft/refs/heads/main/IHMs\Config\IHM_Config.json)
+> 🔗 [Abrir no Visual Wiring](https://fernandofranco.github.io/visual-wiring?project=https://raw.githubusercontent.com/FernandoFranco/Ogiva-Modular-para-Airsoft/refs/heads/main/IHMs/Config/IHM_Config.json)
 
 ## 💡 Funcionamento
 

@@ -11,6 +11,7 @@ Esta biblioteca fornece uma interface simples para obter e exibir informações 
 - **PSRAM**: Tamanho total e memória livre
 - **Heap**: Tamanho total e memória livre
 - **Rede**: Endereço MAC
+- **GPIO**: Mapeamento de pinos disponíveis e suas funções
 
 ## Uso
 
@@ -68,6 +69,27 @@ Exibe apenas informações de rede (MAC Address).
 ### `printMemoryUsage(unsigned long timestamp)`
 
 Exibe o uso atual de memória (Heap e PSRAM) com timestamp.
+
+### `printGPIOMap(bool showState = true)`
+
+Exibe o mapeamento real de pinos GPIO do ESP32-S3 com detecção de estado.
+
+- **showState**: Se `true` (padrão), exibe o estado atual (HIGH/LOW) de cada pino
+
+```cpp
+// Mapeamento com estado dos pinos
+esp32Info.printGPIOMap();
+
+// Mapeamento sem estado (apenas lista de pinos válidos)
+esp32Info.printGPIOMap(false);
+```
+
+**O método detecta automaticamente:**
+
+- Pinos GPIO válidos (0-21, 33-48)
+- Pinos reservados (22-32: Flash/PSRAM)
+- Estado atual de cada pino (HIGH/LOW)
+- Pinos especiais (USB, Serial, LED RGB, etc)
 
 ## Dependências
 

@@ -40,40 +40,55 @@ Utilizado para conexão com IHMs (Interfaces Humana-Máquina). O conector SATA f
 
 Todos os módulos devem implementar o seguinte padrão de pinagem SATA (Fêmea 7 pinos):
 
-| Pino SATA | Sinal          | GPIO ESP32 | Função                           | Direção      |
-| --------- | -------------- | ---------- | -------------------------------- | ------------ |
-| 1         | **VCC**        | 3V3        | Alimentação 3.3V para IHM        | Saída        |
-| 2         | **GND**        | GND        | Terra comum                      | Comum        |
-| 3         | **SDA**        | GPIO 8     | Comunicação I²C (dados)          | Bidirecional |
-| 4         | **SCL**        | GPIO 9     | Comunicação I²C (clock)          | Saída        |
-| 5         | **1-Wire**     | GPIO 4     | Detecção e ID da IHM (DS2431)    | Bidirecional |
-| 6         | **Buzzer**     | GPIO 5     | Controle do buzzer da IHM        | Saída        |
-| 7         | **LED Status** | GPIO 6     | Controle do LED de status da IHM | Saída        |
+| Pino SATA | Sinal   | GPIO ESP32 | Função                      | Direção      |
+| --------- | ------- | ---------- | --------------------------- | ------------ |
+| 1         | **GND** | GND        | Terra comum                 | Comum        |
+| 2         | **VCC** | 3V3        | Alimentação 3.3V para IHM   | Saída        |
+| 3         | **INT** | GPIO 4     | Interrupção dos PCF8574 I/O | Entrada      |
+| 4         | **GND** | GND        | Terra comum                 | Comum        |
+| 5         | **SDA** | GPIO 8     | Comunicação I²C (dados)     | Bidirecional |
+| 6         | **SCL** | GPIO 9     | Comunicação I²C (clock)     | Saída        |
+| 7         | **GND** | GND        | Terra comum                 | Comum        |
+
+### ⚠️ Importante: Padrão SATA de Aterramento
+
+O conector SATA possui uma característica importante relacionada à confiabilidade elétrica:
+
+**Pinos 1, 4 e 7 são interligados eletricamente no cabo SATA**
+
+Esta é uma especificação do próprio padrão SATA que garante:
+
+- **Melhor aterramento**: Múltiplos pontos de GND reduzem impedância e melhoram a qualidade do sinal
+- **Redução de ruído**: Aterramento robusto minimiza interferências eletromagnéticas
+- **Confiabilidade**: Mesmo se um pino tiver mau contato, os outros garantem a conexão de terra
+
+💡 **Por isso todos os três pinos (1, 4 e 7) foram designados como GND** - eles funcionam como um único aterramento robusto.
 
 ### Notas Importantes
 
-**Pino 1 (VCC - 3.3V):**
+**Pinos 1, 4 e 7 (GND):**
+
+- Terra comum, interligados eletricamente pelo padrão SATA
+- Garantem aterramento robusto e confiável
+- Reduzem ruído e interferências
+
+**Pino 2 (VCC - 3.3V):**
 
 - O ESP32-S3 fornece 3.3V regulado
 - Corrente máxima recomendada: 500mA
 - Todos os componentes das IHMs devem operar em 3.3V
 
-**Pinos 3 e 4 (I²C - SDA/SCL):**
+**Pino 3 (INT):**
 
-- Padrão I²C para comunicação com display e teclado
+- Sinal de interrupção dos PCF8574 I/O
+- Indica quando há dados disponíveis (ex: tecla pressionada)
+- Resistor pull-up de 10kΩ recomendado
+
+**Pinos 5 e 6 (I²C - SDA/SCL):**
+
+- Padrão I²C para comunicação com módulos PCF8574
 - Resistores pull-up de 4.7kΩ recomendados
 - GPIOs 8 e 9 são os pinos I²C padrão do ESP32-S3
-
-**Pino 5 (1-Wire):**
-
-- Protocolo 1-Wire para leitura do DS2431
-- Permite identificação única de cada IHM conectada
-
-**Pinos 6 e 7 (Buzzer/LED):**
-
-- GPIOs de saída digital simples
-- Corrente limitada: usar transistor/driver se necessário
-- Lógica ativa HIGH (3.3V)
 
 ---
 
@@ -84,38 +99,36 @@ graph LR
     subgraph ESP32["ESP32-S3"]
       VCC_ESP[3V3]
       GND_ESP[GND]
-      GPIO8[GPIO 8]
-      GPIO9[GPIO 9]
-      GPIO4[GPIO 4]
-      GPIO5[GPIO 5]
-      GPIO6[GPIO 6]
+      GPIO8[GPIO 8 - SDA]
+      GPIO9[GPIO 9 - SCL]
+      GPIO4[GPIO 4 - INT]
     end
 
-    subgraph SATA
-      PIN1[PIN 1]
-      PIN2[PIN 2]
-      PIN3[PIN 3]
-      PIN4[PIN 4]
-      PIN5[PIN 5]
-      PIN6[PIN 6]
-      PIN7[PIN 7]
+    subgraph SATA["Conector SATA"]
+      PIN1[PIN 1 - GND]
+      PIN2[PIN 2 - VCC]
+      PIN3[PIN 3 - INT]
+      PIN4[PIN 4 - GND]
+      PIN5[PIN 5 - SDA]
+      PIN6[PIN 6 - SCL]
+      PIN7[PIN 7 - GND]
     end
 
-    VCC_ESP --> PIN1
-    GND_ESP --> PIN2
-    GPIO8 --> PIN3
-    GPIO9 --> PIN4
-    GPIO4 --> PIN5
-    GPIO5 --> PIN6
-    GPIO6 --> PIN7
+    GND_ESP --> PIN1
+    GND_ESP --> PIN4
+    GND_ESP --> PIN7
+    VCC_ESP --> PIN2
+    GPIO4 --> PIN3
+    GPIO8 --> PIN5
+    GPIO9 --> PIN6
 
-    linkStyle 0 stroke:red,stroke-width:4px
+    linkStyle 0 stroke:black,stroke-width:4px
     linkStyle 1 stroke:black,stroke-width:4px
-    linkStyle 2 stroke:blue,stroke-width:4px
-    linkStyle 3 stroke:orange,stroke-width:4px
+    linkStyle 2 stroke:black,stroke-width:4px
+    linkStyle 3 stroke:red,stroke-width:4px
     linkStyle 4 stroke:green,stroke-width:4px
-    linkStyle 5 stroke:white,stroke-width:4px
-    linkStyle 6 stroke:purple,stroke-width:4px
+    linkStyle 5 stroke:blue,stroke-width:4px
+    linkStyle 6 stroke:orange,stroke-width:4px
 ```
 
 ---
@@ -124,18 +137,21 @@ graph LR
 
 ### Resistores Pull-Up I²C
 
-- **2x 4.7kΩ** - Para SDA e SCL
+- **2x 4.7kΩ** - Para SDA (GPIO 8) e SCL (GPIO 9)
 - Conectar entre linha I²C e VCC (3.3V)
+- Necessários para comunicação com PCF8574 e outros dispositivos I²C
 
-### Resistor Pull-Up 1-Wire
+### Resistor Pull-Up INT
 
-- **1x 4.7kΩ** - Para linha 1-Wire
+- **1x 10kΩ** - Para linha INT (GPIO 4)
 - Conectar entre GPIO 4 e VCC (3.3V)
+- Necessário para sinal de interrupção dos PCF8574
 
-### Capacitor de Desacoplamento
+### Capacitores de Desacoplamento
 
-- **100nF (0.1µF)** - Próximo ao pino VCC do conector SATA
-- Reduz ruído na alimentação da IHM
+- **1x 100nF (0.1µF)** - Próximo ao pino VCC do conector SATA
+- **2x 100nF (0.1µF)** - Um para cada PCF8574, próximo ao VCC
+- Reduz ruído na alimentação e melhora estabilidade
 
 ---
 

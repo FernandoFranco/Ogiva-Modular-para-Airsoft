@@ -119,88 +119,28 @@ Resistor pull-up para linha 1-Wire do DS2431
 
 ## 🔧 Pinagem SATA (Fêmea 7 pinos)
 
-| Pino | Nome                | Função                                          | Direção      |
-| ---- | ------------------- | ----------------------------------------------- | ------------ |
-| 1    | **VCC**             | Alimentação 3.3V para todos os componentes      | Entrada      |
-| 2    | **GND**             | Terra comum entre IHM e módulo                  | Comum        |
-| 3    | **SDA**             | Comunicação I2C (dados) para teclado e display  | Bidirecional |
-| 4    | **SCL**             | Comunicação I2C (clock) para teclado e display  | Entrada      |
-| 5    | **1-Wire (DS2431)** | Identificação única da IHM via protocolo 1-Wire | Bidirecional |
-| 6    | **Buzzer**          | Controle do buzzer                              | Entrada      |
-| 7    | **LED Status**      | Controle do LED de status                       | Entrada      |
+| Pino | Sinal   | Função                                                 | Direção      |
+| ---- | ------- | ------------------------------------------------------ | ------------ |
+| 1    | **GND** | Terra comum                                            | Comum        |
+| 2    | **VCC** | Alimentação 3.3V (recebida do módulo)                  | Entrada      |
+| 3    | **INT** | Interrupção dos PCF8574 I/O                            | Saída        |
+| 4    | **GND** | Terra comum                                            | Comum        |
+| 5    | **SDA** | I²C - Dados (teclado, display, buzzer e LED de status) | Bidirecional |
+| 6    | **SCL** | I²C - Clock (teclado, display, buzzer e LED de status) | Entrada      |
+| 7    | **GND** | Terra comum                                            | Comum        |
 
 ### Notas sobre Pinagem
 
-- **Pino 5 (1-Wire/DS2431)**: Utiliza o chip DS2431 para:
-  - Identificação única de cada IHM
-  - Suporte a múltiplas IHMs conectadas via barramento
-  - Armazenamento de configurações persistentes (1024 bits EEPROM)
+- **Pinos 1, 4 e 7 (GND)**: Interligados eletricamente pelo padrão SATA, garantindo aterramento robusto
+- **Pino 2 (VCC)**: A IHM é alimentada pelo módulo via este pino (3.3V)
+- **Pino 3 (INT)**: Sinal de interrupção dos PCF8574 I/O, indica quando há dados disponíveis (teclado pressionado)
+- **Pinos 5 e 6 (I²C)**: Comunicação com módulos PCF8574 (teclado e feedback)
 
 ### Diagrama de Conexões
 
-```mermaid
-graph LR
-    subgraph SATA
-      PIN1[PIN 1]
-      PIN2[PIN 2]
-      PIN3[PIN 3]
-      PIN4[PIN 4]
-      PIN5[PIN 5]
-      PIN6[PIN 6]
-      PIN7[PIN 7]
-    end
+![Schematic das ligações](images/schematic.svg)
 
-    subgraph I2C
-      I2C_VCC[VCC]
-      I2C_GND[GND]
-      I2C_SDA[SDA]
-      I2C_SCL[SCL]
-    end
-
-    subgraph DS2431
-      DS2431_GND[GND]
-      DS2431_Data[Data]
-      DS2431_NC[NC]
-    end
-
-    subgraph Buzzer
-      Buzzer_P[+]
-      Buzzer_N[-]
-    end
-
-    subgraph LED
-      LED_P[+]
-      LED_N[-]
-    end
-
-    PIN1 --> I2C_VCC
-    PIN2 --> I2C_GND
-    PIN3 --> I2C_SDA
-    PIN4 --> I2C_SCL
-    linkStyle 0 stroke:red,stroke-width:4px
-    linkStyle 1 stroke:black,stroke-width:4px
-    linkStyle 2 stroke:blue,stroke-width:4px
-    linkStyle 3 stroke:orange,stroke-width:4px
-
-    PIN5 --> R4K7[4.7kΩ]
-    R4K7 --> DS2431_Data
-    PIN2 --> DS2431_GND
-    linkStyle 4 stroke:green,stroke-width:4px
-    linkStyle 5 stroke:green,stroke-width:4px
-    linkStyle 6 stroke:black,stroke-width:4px
-
-    PIN6 --> Buzzer_P
-    PIN2 --> Buzzer_N
-    linkStyle 7 stroke:gray,stroke-width:4px
-    linkStyle 8 stroke:black,stroke-width:4px
-
-    PIN7 --> R330R[330Ω]
-    R330R --> LED_P
-    PIN2 --> LED_N
-    linkStyle 9 stroke:purple,stroke-width:4px
-    linkStyle 10 stroke:purple,stroke-width:4px
-    linkStyle 11 stroke:black,stroke-width:4px
-```
+> 🔗 [Abrir no Visual Wiring](https://fernandofranco.github.io/visual-wiring?project=https://raw.githubusercontent.com/FernandoFranco/Ogiva-Modular-para-Airsoft/refs/heads/main/IHMs\Config\IHM_Config.json)
 
 ## 💡 Funcionamento
 
